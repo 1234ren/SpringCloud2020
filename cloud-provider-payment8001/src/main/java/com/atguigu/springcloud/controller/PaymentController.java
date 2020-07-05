@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -35,6 +36,11 @@ public class PaymentController {
         }
         @GetMapping(value = "/payment/get/{id}")
         public CommonResult getPaymentById(@PathVariable("id") Long id){
+           /* try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
             Payment result = paymentService.getPaymentById(id);
             if(null != result){
                 //log.info("**********插入数据成功**********"+result+"条儿");
@@ -61,5 +67,18 @@ public class PaymentController {
     public String paymentZk(){
 
         return "spring cloud zookeeper:"+serverPort+"\t"+ UUID.randomUUID().toString();
+    }
+    @GetMapping("/payment/lb")
+    public String getServerPort(){
+            return serverPort;
+    }
+    @GetMapping("/payment/fegin/timeout")
+    public String getTimeout(){
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return serverPort;
     }
 }
